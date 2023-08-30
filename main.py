@@ -57,6 +57,8 @@ def main():
         selection_method2 = selection_methods[selection_method2]
 
         a_weight = config["a_weight"]
+        if not isinstance(a_weight, float) or a_weight < 0 or a_weight > 1:
+            raise ValueError(f"Invalid a_weight: {a_weight}")
 
         def selection_method():
             return selection_method1() * a_weight + selection_method2() * (1 - a_weight)
@@ -73,6 +75,8 @@ def main():
         replacement_method2 = selection_methods[replacement_method2]
 
         b_weight = config["b_weight"]
+        if not isinstance(b_weight, float) or b_weight < 0 or b_weight > 1:
+            raise ValueError(f"Invalid b_weight: {b_weight}")
 
         def replacement_method():
             return replacement_method1() * b_weight + (
