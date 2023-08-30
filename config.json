@@ -1,0 +1,19 @@
+{
+    "class": "Archer",
+
+    "population_size": 2,
+
+    "crossover_method": "",
+
+    "mutation_method": "",
+
+    "a_weigth": 0.0,
+    "selection_method1": "",
+    "selection_method2": "",
+
+    "b_weight": 0.0,
+    "replacement_method1": "",
+    "replacement_method2": "",
+
+    "stop_criteria": {}
+}
