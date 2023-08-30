@@ -68,30 +68,3 @@ class Character:
             * self.get_health_coefficient()
             * self.get_defense_modifier()
         )
-
-    # ------- Performance -------- #
-
-    @abstractmethod
-    def get_performance(self):
-        pass
-
-
-# ------- Character types -------- #
-class Warrior(Character):
-    def get_performance(self):
-        return 0.6 * self.get_attack() + 0.4 * self.get_defense()
-
-
-class Archer(Character):
-    def get_performance(self):
-        return 0.9 * self.get_attack() + 0.1 * self.get_defense()
-
-
-class Defender(Character):
-    def get_performance(self):
-        return 0.1 * self.get_attack() + 0.9 * self.get_defense()
-
-
-class Infiltrator(Character):
-    def get_performance(self):
-        return 0.7 * self.get_attack() + 0.3 * self.get_defense()
