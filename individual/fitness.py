@@ -1,4 +1,4 @@
-from character import Character
+from individual.character import Character
 
 def warrior_fitness(character: Character) -> float:
     return 0.6 * character.get_attack() + 0.4 * character.get_defense()
