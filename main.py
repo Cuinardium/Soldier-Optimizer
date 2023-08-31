@@ -18,6 +18,14 @@ from genetic_operators.mutation_methods import (
     not_uniform,
     uniform,
 )
+from selection_methods import (
+    elitism,
+    roulette,
+    universal,
+    boltzmann,
+    ranking,
+    tournament,
+)
 
 fitness_functions = {
     "warrior": warrior_fitness,
@@ -40,7 +48,14 @@ mutation_methods = {
     "uniform": uniform,
 }
 
-selection_methods = {}
+selection_methods = {
+    "elitism": elitism,
+    "roulette": roulette,
+    "universal": universal,
+    "boltzmann": boltzmann,
+    "ranking": ranking,
+    "tournament": tournament
+}
 
 stop_criteria_methods = {}
 

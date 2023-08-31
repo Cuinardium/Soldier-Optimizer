@@ -7,9 +7,9 @@
 
     "mutation_method": "gen",
 
-    "a_weigth": 0.0,
-    "selection_method1": "",
-    "selection_method2": "",
+    "a_weight": 0.0,
+    "selection_method1": "elitism",
+    "selection_method2": "roulette",
 
     "b_weight": 0.0,
     "replacement_method1": "",
