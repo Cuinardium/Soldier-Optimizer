@@ -1,11 +1,11 @@
 {
-    "class": "Archer",
+    "character_class": "archer",
 
     "population_size": 2,
 
-    "crossover_method": "",
+    "crossover_method": "anular",
 
-    "mutation_method": "",
+    "mutation_method": "gen",
 
     "a_weigth": 0.0,
     "selection_method1": "",
