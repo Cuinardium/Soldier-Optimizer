@@ -1,30 +1,39 @@
 from abc import abstractmethod
 import math
+from enum import Enum
 
 
 class Character:
+    class Characteristics(Enum):
+        STRENGTH = 0
+        AGILITY = 1
+        EXPERTISE = 2
+        RESISTANCE = 3
+        HEALTH = 4
+        HEIGHT = 5
+
     def __init__(self, chromosome):
         self.chromosome = chromosome
 
-    # -------- Encoded in chromosome TODO: implement -------- #
+    # -------- Encoded in chromosome -------- #
 
     def get_strength_points(self):
-        pass
+        return self.chromosome[Character.Characteristics.STRENGTH.value]
 
     def get_agility_points(self):
-        pass
+        return self.chromosome[Character.Characteristics.AGILITY.value]
 
     def get_expertise_points(self):
-        pass
+        return self.chromosome[Character.Characteristics.EXPERTISE.value]
 
     def get_resistance_points(self):
-        pass
+        return self.chromosome[Character.Characteristics.RESISTANCE.value]
 
     def get_health_points(self):
-        pass
+        return self.chromosome[Character.Characteristics.HEALTH.value]
 
     def get_height(self):
-        pass
+        return self.chromosome[Character.Characteristics.HEIGHT.value]
 
     # ------- Coefficients -------- #
 
