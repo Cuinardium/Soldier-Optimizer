@@ -17,7 +17,7 @@ def anular(point, length, chromosome1, chromosome2):
     else:
         __assignation(0, point, child1, child2, chromosome1, chromosome2)
         __assignation(point+1, point+1+length, child2, child1, chromosome1, chromosome2)
-        __assignation(point+1+length, CHROMOSOME_LENGTH, child1, child2, chromosome1, chromosome2)
+        __assignation(point+length+2, CHROMOSOME_LENGTH, child1, child2, chromosome1, chromosome2)
     
     return child1, child2
 
