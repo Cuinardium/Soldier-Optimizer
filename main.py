@@ -18,7 +18,7 @@ from genetic_operators.mutation_methods import (
     not_uniform,
     uniform,
 )
-from selection_methods import (
+from genetic_operators.selection_methods import (
     elitism,
     roulette,
     universal,
