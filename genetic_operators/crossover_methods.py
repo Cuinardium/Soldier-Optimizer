@@ -44,5 +44,15 @@ def two_point(point1, point2, chromosome1, chromosome2):
     return child1, child2
 
 
-def uniform():
-    pass
+def uniform(probability, chromosome1, chromosome2):
+    child1 = child2 = []
+
+    for i in range(CHROMOSOME_LENGTH):
+        if random.random() < probability:
+            child2[i] = chromosome1[i]
+            child1[i] = chromosome2[i]
+        else:
+            child1[i] = chromosome1[i]
+            child2[i] = chromosome2[i]
+
+    return child1, child2
