@@ -1,7 +1,10 @@
 import json
 
 from individual.fitness import fitness_functions
-from genetic_operators.selection_methods import selection_methods
+from genetic_operators.selection_methods import (
+    join_selection_methods,
+    selection_methods,
+)
 from genetic_operators.crossover_methods import crossover_methods
 from genetic_operators.mutation_methods import mutation_methods
 
@@ -33,8 +36,9 @@ def main():
 
         a_weight = config["a_weight"]
 
-        def selection_method():
-            return selection_method1() * a_weight + selection_method2() * (1 - a_weight)
+        selection_method = join_selection_methods(
+            selection_method1, selection_method2, a_weight
+        )
 
         # ------------ Crossover ------------
         crossover_method = config["crossover_method"]
@@ -61,10 +65,9 @@ def main():
 
         b_weight = config["b_weight"]
 
-        def replacement_method():
-            return replacement_method1() * b_weight + (
-                replacement_method2() * (1 - b_weight)
-            )
+        replacement_method = join_selection_methods(
+            replacement_method1, replacement_method2, b_weight
+        )
 
         # ------------ Stop Criteria ------------
         stop_criteria = config["stop_criteria"]

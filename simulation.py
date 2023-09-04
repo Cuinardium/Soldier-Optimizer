@@ -1,4 +1,3 @@
-from typing import Callable
 from genetic_operators.crossover_methods import CrossOverMethod
 from genetic_operators.mutation_methods import MutationMethod
 from genetic_operators.selection_methods import SelectionMethod
