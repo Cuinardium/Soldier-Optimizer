@@ -12,7 +12,7 @@ def simulate(
     mutation_method: MutationMethod,
     replacement_method: SelectionMethod,
     stop_criteria,
-    population_size,
+    population_size: int,
 ):
     population = initialize_population(population_size)
 

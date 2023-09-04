@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Dict
 from individual.character import Character
 
 def gen(population: list[Character]) -> list[Character]:
@@ -15,7 +15,7 @@ def uniform(population: list[Character]) -> list[Character]:
 
 MutationMethod = Callable[[list[Character]], list[Character]]
 
-mutation_methods = {
+mutation_methods: Dict[str, MutationMethod] = {
     "gen": gen,
     "multi_gen": multi_gen,
     "not_uniform": not_uniform,

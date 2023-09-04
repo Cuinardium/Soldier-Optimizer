@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Dict
 from individual.character import Character
 from individual.fitness import FitnessFunction
 
@@ -41,7 +41,7 @@ def ranking(
 
 SelectionMethod = Callable[[list[Character], FitnessFunction], list[Character]]
 
-selection_methods = {
+selection_methods: Dict[str, SelectionMethod] = {
     "elitism": elitism,
     "roulette": roulette,
     "universal": universal,
