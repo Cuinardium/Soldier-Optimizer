@@ -5,8 +5,10 @@ from typing import Callable, Dict, Tuple
 
 CHROMOSOME_LENGTH = 6
 
+# --------------------- Methods --------------------- #
+
 # Selects a random point in the chromosome and a random amount of genes to cross
-def anular(parent1: Character, parent2: Character) -> Tuple[Character, Character]:
+def __anular(parent1: Character, parent2: Character) -> Tuple[Character, Character]:
     from_point = random.randint(0, CHROMOSOME_LENGTH - 1)
     amount = random.randint(0, math.ceil(CHROMOSOME_LENGTH / 2))
 
@@ -14,7 +16,7 @@ def anular(parent1: Character, parent2: Character) -> Tuple[Character, Character
 
 
 # Selects a random point in the chromosome and crosses the genes from that point
-def point(parent1: Character, parent2: Character) -> Tuple[Character, Character]:
+def __point(parent1: Character, parent2: Character) -> Tuple[Character, Character]:
     from_point = random.randint(0, CHROMOSOME_LENGTH - 1)
     amount = CHROMOSOME_LENGTH - from_point
 
@@ -22,7 +24,7 @@ def point(parent1: Character, parent2: Character) -> Tuple[Character, Character]
 
 
 # Selects two random points in the chromosome and crosses the genes between them
-def two_point(parent1: Character, parent2: Character) -> Tuple[Character, Character]:
+def __two_point(parent1: Character, parent2: Character) -> Tuple[Character, Character]:
     from_point = random.randint(0, CHROMOSOME_LENGTH - 1)
     to_point = random.randint(0, CHROMOSOME_LENGTH - 1)
     if from_point > to_point:
@@ -34,28 +36,43 @@ def two_point(parent1: Character, parent2: Character) -> Tuple[Character, Charac
 
 
 # For each gene, it has a probability of crossing it
-def uniform(parent1: Character, parent2: Character) -> Tuple[Character, Character]:
-    # TODO: Esto debería ser configurable?
-    probability = 0.5
-
+uniform_crossover_probability: float
+def __uniform(parent1: Character, parent2: Character) -> Tuple[Character, Character]:
     child1 = Character(parent1.chromosome.copy())
     child2 = Character(parent2.chromosome.copy())
 
+    global uniform_crossover_probability
     for i in range(CHROMOSOME_LENGTH):
-        if random.random() < probability:
+        if random.random() < uniform_crossover_probability:
             child1.chromosome[i] = parent2.chromosome[i]
             child2.chromosome[i] = parent1.chromosome[i]
 
     return child1, child2
 
+
+# --------------------- Builder --------------------- #
+
 CrossOverMethod = Callable[[list[Character]], list[Character]]
-crossover_methods: Dict[str, CrossOverMethod] = {
-    "anular": lambda population: __cross_population(population, anular),
-    "point": lambda population: __cross_population(population, point),
-    "two_point": lambda population: __cross_population(population, two_point),
-    "uniform": lambda population: __cross_population(population, uniform),
+__crossover_methods: Dict[str, CrossOverMethod] = {
+    "anular": lambda population: __cross_population(population, __anular),
+    "point": lambda population: __cross_population(population, __point),
+    "two_point": lambda population: __cross_population(population, __two_point),
+    "uniform": lambda population: __cross_population(population, __uniform),
 }
 
+def get_crossover_method(crossover_config: dict) -> CrossOverMethod:
+    crossover_method = crossover_config["crossover_method"]
+    if crossover_method not in __crossover_methods:
+        raise ValueError(f"Unknown crossover method: {crossover_method}")
+
+    if crossover_method == "uniform":
+        global uniform_crossover_probability
+        uniform_crossover_probability = crossover_config["crossover_probability"]
+
+
+    return __crossover_methods[crossover_method]
+
+# --------------------- Helpers --------------------- #
 
 # Crosses the population using the given method
 # If the population is odd, the last individual is not crossed

@@ -5,7 +5,7 @@ from genetic_operators.selection_methods import (
     join_selection_methods,
     selection_methods,
 )
-from genetic_operators.crossover_methods import crossover_methods
+from genetic_operators.crossover_methods import get_crossover_method
 from genetic_operators.mutation_methods import mutation_methods
 
 from simulation import simulate
@@ -41,13 +41,11 @@ def main():
         )
 
         # ------------ Crossover ------------
-        crossover_method = config["crossover_method"]
-        if crossover_method not in crossover_methods:
-            raise ValueError(f"Unknown crossover method: {crossover_method}")
-        crossover_method = crossover_methods[crossover_method]
+        crossover_method = get_crossover_method(config["crossover"])
 
         # ------------ Mutation ------------
         mutation_method = config["mutation_method"]
+
         if mutation_method not in mutation_methods:
             raise ValueError(f"Unknown mutation method: {mutation_method}")
         mutation_method = mutation_methods[mutation_method]

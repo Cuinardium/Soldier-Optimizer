@@ -3,9 +3,21 @@
 
     "population_size": 2,
 
-    "crossover_method": "anular",
+    "crossover": {
+        "crossover_method": "anular",
+        "uniform": {
+            "crossover_probability": 0.5,
+        },
+    }
 
-    "mutation_method": "gen",
+    "mutation": {
+        "mutation_probability": 0.1,
+        "probability_evolution": "uniform",
+        "mutation_method": "single_gen",
+        "single_gen": {
+            "gen_to_mutate": "height",
+        }
+    }
 
     "a_weight": 0.0,
     "selection_method1": "elitism",
