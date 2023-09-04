@@ -36,14 +36,14 @@ def __two_point(parent1: Character, parent2: Character) -> Tuple[Character, Char
 
 
 # For each gene, it has a probability of crossing it
-uniform_crossover_probability: float
-def __uniform(parent1: Character, parent2: Character) -> Tuple[Character, Character]:
+def __uniform(
+    parent1: Character, parent2: Character, crossover_probability: float
+) -> Tuple[Character, Character]:
     child1 = Character(parent1.chromosome.copy())
     child2 = Character(parent2.chromosome.copy())
 
-    global uniform_crossover_probability
     for i in range(CHROMOSOME_LENGTH):
-        if random.random() < uniform_crossover_probability:
+        if random.random() < crossover_probability:
             child1.chromosome[i] = parent2.chromosome[i]
             child2.chromosome[i] = parent1.chromosome[i]
 
@@ -53,26 +53,43 @@ def __uniform(parent1: Character, parent2: Character) -> Tuple[Character, Charac
 # --------------------- Builder --------------------- #
 
 CrossOverMethod = Callable[[list[Character]], list[Character]]
-__crossover_methods: Dict[str, CrossOverMethod] = {
-    "anular": lambda population: __cross_population(population, __anular),
-    "point": lambda population: __cross_population(population, __point),
-    "two_point": lambda population: __cross_population(population, __two_point),
-    "uniform": lambda population: __cross_population(population, __uniform),
+__crossover_methods: Dict[str, Callable] = {
+    "anular": __anular,
+    "point": __point,
+    "two_point": __two_point,
+    "uniform": __uniform,
 }
 
+
+# Builds the crossover method from the given config
 def get_crossover_method(crossover_config: dict) -> CrossOverMethod:
     crossover_method = crossover_config["crossover_method"]
+
     if crossover_method not in __crossover_methods:
         raise ValueError(f"Unknown crossover method: {crossover_method}")
 
+    # Uniform crossover is a special case, since it needs a probability
     if crossover_method == "uniform":
-        global uniform_crossover_probability
         uniform_crossover_probability = crossover_config["crossover_probability"]
 
+        if uniform_crossover_probability < 0 or uniform_crossover_probability > 1:
+            raise ValueError(
+                f"Invalid crossover probability: {uniform_crossover_probability}"
+            )
 
-    return __crossover_methods[crossover_method]
+        # Build the uniform crossover method with the given probability
+        crossover_method = lambda p1, p2: __uniform(
+            p1, p2, uniform_crossover_probability
+        )
+    else:
+        crossover_method = __crossover_methods[crossover_method]
+
+    # Build the crossover method with the given method
+    return lambda population: __cross_population(population, crossover_method)
+
 
 # --------------------- Helpers --------------------- #
+
 
 # Crosses the population using the given method
 # If the population is odd, the last individual is not crossed
@@ -92,6 +109,7 @@ def __cross_population(
         children.append(child2)
 
     return children
+
 
 # Crosses the parents from the given point and amount
 def __cross_parents(
