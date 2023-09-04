@@ -113,9 +113,14 @@ def random_individual() -> Character:
 def normalize_points(chromosome: list[float]):
     sum_points = 0.0
     for characteristic in Character.Characteristics:
+        if characteristic == Character.Characteristics.HEIGHT:
+            continue
+
         sum_points += chromosome[characteristic.value]
 
     for characteristic in Character.Characteristics:
+        if characteristic == Character.Characteristics.HEIGHT:
+            continue
         chromosome[characteristic.value] = (
             chromosome[characteristic.value] / sum_points * 150
         )
