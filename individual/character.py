@@ -1,4 +1,3 @@
-from abc import abstractmethod
 import math
 from enum import Enum
 import random
@@ -77,6 +76,20 @@ class Character:
             (self.get_resistance_coefficient() + self.get_expertise_coefficient())
             * self.get_health_coefficient()
             * self.get_defense_modifier()
+        )
+
+    # ------- String representation -------- #
+    def __str__(self) -> str:
+        return (
+            f"Character: \n"
+            f"Strength: {self.get_strength_points()} \n"
+            f"Agility: {self.get_agility_points()} \n"
+            f"Expertise: {self.get_expertise_points()} \n"
+            f"Resistance: {self.get_resistance_points()} \n"
+            f"Health: {self.get_health_points()} \n"
+            f"Height: {self.get_height()} \n"
+            f"Attack: {self.get_attack()} \n"
+            f"Defense: {self.get_defense()} \n"
         )
 
 

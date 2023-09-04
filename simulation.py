@@ -13,7 +13,7 @@ def simulate(
     replacement_method: SelectionMethod,
     stop_criteria,
     population_size: int,
-):
+) -> list[Character]:
     population = initialize_population(population_size)
 
     # Run the simulation until the stop criteria is met

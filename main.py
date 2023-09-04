@@ -79,7 +79,7 @@ def main():
         population_size = config["population_size"]
 
         # ------------ Simulation ------------
-        simulate(
+        final_population = simulate(
             fitness_function,
             selection_method,
             crossover_method,
@@ -88,6 +88,12 @@ def main():
             stop_criteria,
             population_size,
         )
+
+        # ------------ Results ------------
+        print("Final population:")
+        for individual in final_population:
+            print(individual)
+            print(f"Fitness: {fitness_function(individual)}\n")
 
 
 if __name__ == "__main__":
