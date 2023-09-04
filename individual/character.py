@@ -1,6 +1,7 @@
 from abc import abstractmethod
 import math
 from enum import Enum
+import random
 
 
 class Character:
@@ -12,49 +13,49 @@ class Character:
         HEALTH = 4
         HEIGHT = 5
 
-    def __init__(self, chromosome):
+    def __init__(self, chromosome: list[float]):
         self.chromosome = chromosome
 
     # -------- Encoded in chromosome -------- #
 
-    def get_strength_points(self):
+    def get_strength_points(self) -> float:
         return self.chromosome[Character.Characteristics.STRENGTH.value]
 
-    def get_agility_points(self):
+    def get_agility_points(self) -> float:
         return self.chromosome[Character.Characteristics.AGILITY.value]
 
-    def get_expertise_points(self):
+    def get_expertise_points(self) -> float:
         return self.chromosome[Character.Characteristics.EXPERTISE.value]
 
-    def get_resistance_points(self):
+    def get_resistance_points(self) -> float:
         return self.chromosome[Character.Characteristics.RESISTANCE.value]
 
-    def get_health_points(self):
+    def get_health_points(self) -> float:
         return self.chromosome[Character.Characteristics.HEALTH.value]
 
-    def get_height(self):
+    def get_height(self) -> float:
         return self.chromosome[Character.Characteristics.HEIGHT.value]
 
     # ------- Coefficients -------- #
 
-    def get_strength_coefficient(self):
+    def get_strength_coefficient(self) -> float:
         return 100 * math.tanh(0.01 * self.get_strength_points())
 
-    def get_agility_coefficient(self):
+    def get_agility_coefficient(self) -> float:
         return math.tanh(0.01 * self.get_agility_points())
 
-    def get_expertise_coefficient(self):
+    def get_expertise_coefficient(self) -> float:
         return 0.6 * math.tanh(0.01 * self.get_expertise_points())
 
-    def get_resistance_coefficient(self):
+    def get_resistance_coefficient(self) -> float:
         return math.tanh(0.01 * self.get_resistance_points())
 
-    def get_health_coefficient(self):
+    def get_health_coefficient(self) -> float:
         return 100 * math.tanh(0.01 * self.get_health_points())
 
     # ------- Attack and Defense modifiers -------- #
 
-    def get_attack_modifier(self):
+    def get_attack_modifier(self) -> float:
         height = self.get_height()
         return 0.5 - (3 * height - 5) ** 4 + (3 * height - 5) ** 2 + height / 2
 
@@ -64,16 +65,18 @@ class Character:
 
     # ------- Attack and Defense -------- #
 
-    def get_attack(self):
+    def get_attack(self) -> float:
         return (
             (self.get_agility_coefficient() + self.get_expertise_coefficient())
             * self.get_strength_coefficient()
             * self.get_attack_modifier()
         )
 
-    def get_defense(self):
+    def get_defense(self) -> float:
         return (
             (self.get_resistance_coefficient() + self.get_expertise_coefficient())
             * self.get_health_coefficient()
             * self.get_defense_modifier()
         )
+
+

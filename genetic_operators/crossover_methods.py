@@ -1,4 +1,6 @@
 import random
+from individual.character import Character
+from typing import Callable, Dict
 
 CHROMOSOME_LENGTH = 6
 
@@ -56,3 +58,12 @@ def uniform(probability, chromosome1, chromosome2):
             child2[i] = chromosome2[i]
 
     return child1, child2
+
+CrossOverMethod = Callable[[list[Character]], list[Character]]
+
+crossover_methods: Dict[str, CrossOverMethod] = {
+    "anular": anular,
+    "point": point,
+    "two_point": two_point,
+    "uniform": uniform,
+}

@@ -1,61 +1,11 @@
 import json
+
+from individual.fitness import fitness_functions
+from genetic_operators.selection_methods import selection_methods
+from genetic_operators.crossover_methods import crossover_methods
+from genetic_operators.mutation_methods import mutation_methods
+
 from simulation import simulate
-from individual.fitness import (
-    warrior_fitness,
-    archer_fitness,
-    defender_fitness,
-    infiltrator_fitness,
-)
-from genetic_operators.crossover_methods import (
-    anular,
-    point,
-    two_point,
-    uniform,
-)
-from genetic_operators.mutation_methods import (
-    gen,
-    multi_gen,
-    not_uniform,
-    uniform,
-)
-from genetic_operators.selection_methods import (
-    elitism,
-    roulette,
-    universal,
-    boltzmann,
-    ranking,
-    tournament,
-)
-
-fitness_functions = {
-    "warrior": warrior_fitness,
-    "archer": archer_fitness,
-    "defender": defender_fitness,
-    "infiltrator": infiltrator_fitness,
-}
-
-crossover_methods = {
-    "anular": anular,
-    "point": point,
-    "two_point": two_point,
-    "uniform": uniform,
-}
-
-mutation_methods = {
-    "gen": gen,
-    "multi_gen": multi_gen,
-    "not_uniform": not_uniform,
-    "uniform": uniform,
-}
-
-selection_methods = {
-    "elitism": elitism,
-    "roulette": roulette,
-    "universal": universal,
-    "boltzmann": boltzmann,
-    "ranking": ranking,
-    "tournament": tournament
-}
 
 stop_criteria_methods = {}
 
