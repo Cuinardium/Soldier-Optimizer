@@ -80,3 +80,29 @@ class Character:
         )
 
 
+# Create a random individual
+def random_individual() -> Character:
+    chromosome: list[float] = []
+
+    # Height must be between 1.3 and 2.0
+    chromosome[Character.Characteristics.HEIGHT.value] = random.uniform(1.3, 2.0)
+
+    # Strength, agility, expertise, resistance, health, normal distribution
+    # mean = 150/5 = 30, standard deviation = 30/5 = 6
+    for characteristic in Character.Characteristics:
+        chromosome[characteristic.value] = random.gauss(30, 6)
+
+    normalize_points(chromosome)
+
+    return Character(chromosome)
+
+
+def normalize_points(chromosome: list[float]):
+    sum_points = 0.0
+    for characteristic in Character.Characteristics:
+        sum_points += chromosome[characteristic.value]
+
+    for characteristic in Character.Characteristics:
+        chromosome[characteristic.value] = (
+            chromosome[characteristic.value] / sum_points * 150
+        )

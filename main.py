@@ -20,18 +20,6 @@ def main():
             raise ValueError(f"Unknown character class: {character_class}")
         fitness_function = fitness_functions[character_class]
 
-        # ------------ Crossover ------------
-        crossover_method = config["crossover_method"]
-        if crossover_method not in crossover_methods:
-            raise ValueError(f"Unknown crossover method: {crossover_method}")
-        crossover_method = crossover_methods[crossover_method]
-
-        # ------------ Mutation ------------
-        mutation_method = config["mutation_method"]
-        if mutation_method not in mutation_methods:
-            raise ValueError(f"Unknown mutation method: {mutation_method}")
-        mutation_method = mutation_methods[mutation_method]
-
         # ------------ Selection ------------
         selection_method1 = config["selection_method1"]
         if selection_method1 not in selection_methods:
@@ -47,6 +35,18 @@ def main():
 
         def selection_method():
             return selection_method1() * a_weight + selection_method2() * (1 - a_weight)
+
+        # ------------ Crossover ------------
+        crossover_method = config["crossover_method"]
+        if crossover_method not in crossover_methods:
+            raise ValueError(f"Unknown crossover method: {crossover_method}")
+        crossover_method = crossover_methods[crossover_method]
+
+        # ------------ Mutation ------------
+        mutation_method = config["mutation_method"]
+        if mutation_method not in mutation_methods:
+            raise ValueError(f"Unknown mutation method: {mutation_method}")
+        mutation_method = mutation_methods[mutation_method]
 
         # ----------- Replacement ------------
         replacement_method1 = config["replacement_method1"]
@@ -78,9 +78,9 @@ def main():
         # ------------ Simulation ------------
         simulate(
             fitness_function,
+            selection_method,
             crossover_method,
             mutation_method,
-            selection_method,
             replacement_method,
             stop_criteria,
             population_size,
