@@ -110,13 +110,13 @@ def get_selection_method(config: dict) -> SelectionMethod:
 
     selection_method2 = __selection_methods[selection_method2]
 
-    method1_propotion = config["method1_propotion"]
+    method1_propotion = config["method1_proportion"]
     if method1_propotion < 0 or method1_propotion > 1:
         raise ValueError(
-            f"Method 1 propotion must be between 0 and 1. Received: {method1_propotion}"
+            f"Method 1 proportion must be between 0 and 1. Received: {method1_propotion}"
         )
 
-    selection_amount = config["selection_amount"]
+    selection_amount = config["amount"]
 
     def joined_selection_method(
         population: list[Character], fitness_function: FitnessFunction

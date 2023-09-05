@@ -3,35 +3,35 @@
 
     "population_size": 2,
 
-    "selection" {
+    "selection": {
         "method1": "tournament",
         "method1_proportion": 0.5,
         "method2": "roulette",
-        "selection_amount": 2,
-    }
+        "amount": 2
+    },
 
     "crossover": {
         "method": "anular",
         "uniform": {
-            "crossover_probability": 0.5,
-        },
-    }
+            "crossover_probability": 0.5
+        }
+    },
 
     "mutation": {
         "probability": 0.1,
         "uniform": true,
         "multi_gen": false,
         "single_gen": {
-            "gen_to_mutate": "height",
+            "gen_to_mutate": "height"
         }
-    }
+    },
 
     "replacement": {
         "method1": "elitism",
         "method1_proportion": 0.5,
         "method2": "roulette",
-        "replacement_amount": 2,
-    }
+        "amount": 2
+    },
 
     "stop_criteria": {}
 }

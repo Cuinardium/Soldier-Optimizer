@@ -34,7 +34,9 @@ def get_mutation_method(config: dict) -> MutationMethod:
     global mutation_probability
     mutation_probability = config["probability"]
 
-    gen_to_mutate = Character.Characteristics.from_string(config["gen_to_mutate"])
+    gen_to_mutate = Character.Characteristics.from_string(
+        config["single_gen"]["gen_to_mutate"]
+    )
 
     return lambda population: __mutate_population(
         population,
