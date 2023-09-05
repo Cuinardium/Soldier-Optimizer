@@ -3,8 +3,10 @@ from individual.character import Character
 from individual.fitness import FitnessFunction
 import random
 
+# --------------------- Methods --------------------- #
 
-def elitism(
+
+def __elitism(
     population: list[Character],
     fitness_function: FitnessFunction,
     selection_amount: int,
@@ -12,8 +14,7 @@ def elitism(
     return population
 
 
-# TODO: ver si le pasamos cantidad a seleccionar
-def roulette(
+def __roulette(
     population: list[Character],
     fitness_function: FitnessFunction,
     selection_amount: int,
@@ -51,7 +52,7 @@ def roulette(
     return selections
 
 
-def universal(
+def __universal(
     population: list[Character],
     fitness_function: FitnessFunction,
     selection_amount: int,
@@ -59,7 +60,7 @@ def universal(
     return population
 
 
-def boltzmann(
+def __boltzmann(
     population: list[Character],
     fitness_function: FitnessFunction,
     selection_amount: int,
@@ -67,7 +68,7 @@ def boltzmann(
     return population
 
 
-def tournament(
+def __tournament(
     population: list[Character],
     fitness_function: FitnessFunction,
     selection_amount: int,
@@ -75,23 +76,24 @@ def tournament(
     return population
 
 
-def ranking(
+def __ranking(
     population: list[Character],
     fitness_function: FitnessFunction,
     selection_amount: int,
 ) -> list[Character]:
     return population
 
+
+# --------------------- Builder --------------------- #
 
 SelectionMethod = Callable[[list[Character], FitnessFunction], list[Character]]
-
 __selection_methods: Dict[str, Callable] = {
-    "elitism": elitism,
-    "roulette": roulette,
-    "universal": universal,
-    "boltzmann": boltzmann,
-    "ranking": ranking,
-    "tournament": tournament,
+    "elitism": __elitism,
+    "roulette": __roulette,
+    "universal": __universal,
+    "boltzmann": __boltzmann,
+    "ranking": __ranking,
+    "tournament": __tournament,
 }
 
 
@@ -128,4 +130,3 @@ def get_selection_method(config: dict) -> SelectionMethod:
         )
 
     return joined_selection_method
-
