@@ -3,7 +3,7 @@ import json
 from individual.fitness import fitness_functions
 from genetic_operators.selection_methods import get_selection_method
 from genetic_operators.crossover_methods import get_crossover_method
-from genetic_operators.mutation_methods import mutation_methods
+from genetic_operators.mutation_methods import get_mutation_method
 
 from simulation import simulate
 
@@ -20,20 +20,10 @@ def main():
             raise ValueError(f"Unknown character class: {character_class}")
         fitness_function = fitness_functions[character_class]
 
-        # ------------ Selection ------------
+        # ------------ Genetic Operators ------------
         selection_method = get_selection_method(config["selection"])
-
-        # ------------ Crossover ------------
         crossover_method = get_crossover_method(config["crossover"])
-
-        # ------------ Mutation ------------
-        mutation_method = config["mutation_method"]
-
-        if mutation_method not in mutation_methods:
-            raise ValueError(f"Unknown mutation method: {mutation_method}")
-        mutation_method = mutation_methods[mutation_method]
-
-        # ----------- Replacement ------------
+        mutation_method = get_mutation_method(config["mutation"])
         replacement_method = get_selection_method(config["replacement"])
 
         # ------------ Stop Criteria ------------

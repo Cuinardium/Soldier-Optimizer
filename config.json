@@ -18,9 +18,9 @@
     }
 
     "mutation": {
-        "mutation_probability": 0.1,
-        "probability_evolution": "uniform",
-        "method": "single_gen",
+        "probability": 0.1,
+        "uniform": true,
+        "multi_gen": false,
         "single_gen": {
             "gen_to_mutate": "height",
         }

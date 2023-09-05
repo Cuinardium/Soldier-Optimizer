@@ -11,6 +11,23 @@ class Character:
         RESISTANCE = 3
         HEALTH = 4
         HEIGHT = 5
+        
+        @classmethod
+        def from_string(cls,string: str):
+            mapping = {
+                "strength": cls.STRENGTH,
+                "agility": cls.AGILITY,
+                "expertise": cls.EXPERTISE,
+                "resistance": cls.RESISTANCE,
+                "health": cls.HEALTH,
+                "height": cls.HEIGHT,
+            }
+
+            if string not in mapping:
+                raise ValueError(f"Unknown characteristic: {string}")
+
+            return mapping[string]
+
 
     def __init__(self, chromosome: list[float]):
         self.chromosome = chromosome
@@ -101,9 +118,8 @@ def random_individual() -> Character:
     chromosome[Character.Characteristics.HEIGHT.value] = random.uniform(1.3, 2.0)
 
     # Strength, agility, expertise, resistance, health, normal distribution
-    # mean = 150/5 = 30, standard deviation = 30/5 = 6
     for characteristic in Character.Characteristics:
-        chromosome[characteristic.value] = random.gauss(30, 6)
+        chromosome[characteristic.value] = random.uniform(0, 150)
 
     normalize_points(chromosome)
 

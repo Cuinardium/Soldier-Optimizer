@@ -1,23 +1,82 @@
-from typing import Callable, Dict
-from individual.character import Character
+import random
+from typing import Callable, Dict, Tuple
+from individual.character import Character, normalize_points
 
-def gen(population: list[Character]) -> list[Character]:
-    return population
+# TODO: Make this configurable
+mutation_probability: float = 0.5
 
-def multi_gen(population: list[Character]) -> list[Character]:
-    return population
+# --------------------- Methods --------------------- #
 
-def not_uniform(population: list[Character]) -> list[Character]:
-    return population
 
-def uniform(population: list[Character]) -> list[Character]:
-    return population
+def single_gen_mutation(
+    individual: Character, gen: Character.Characteristics, mutation_probability: float
+) -> Character:
+    if random.random() < mutation_probability:
+        __mutate_gen(individual.chromosome, gen)
+
+    return individual
+
+
+def multi_gen_mutation(individual: Character, mutation_probability: float) -> Character:
+    for characteristic in Character.Characteristics:
+        if random.random() < mutation_probability:
+            __mutate_gen(individual.chromosome, characteristic)
+    return individual
+
+
+# --------------------- Builder --------------------- #
 
 MutationMethod = Callable[[list[Character]], list[Character]]
 
-mutation_methods: Dict[str, MutationMethod] = {
-    "gen": gen,
-    "multi_gen": multi_gen,
-    "not_uniform": not_uniform,
-    "uniform": uniform,
-}
+
+# Builds the mutation method from thr given config
+def get_mutation_method(config: dict) -> MutationMethod:
+    # Set the mutation probability
+    global mutation_probability
+    mutation_probability = config["probability"]
+
+    gen_to_mutate = Character.Characteristics.from_string(config["gen_to_mutate"])
+
+    return lambda population: __mutate_population(
+        population,
+        config["multi_gen"],
+        config["uniform"],
+        gen_to_mutate,
+    )
+
+
+# --------------------- Helpers --------------------- #
+
+
+def __mutate_population(
+    population: list[Character],
+    multi_gen: bool,
+    uniform: bool,
+    gen_to_mutate: Character.Characteristics,
+) -> list[Character]:
+    global mutation_probability
+
+    for index, individual in enumerate(population):
+        if multi_gen:
+            population[index] = multi_gen_mutation(individual, mutation_probability)
+        else:
+            population[index] = single_gen_mutation(
+                individual, gen_to_mutate, mutation_probability
+            )
+
+    if not uniform:
+        # Reduce mutation probability
+        mutation_probability *= 0.95
+
+    return population
+
+
+def __mutate_gen(chromosome: list[float], gen: Character.Characteristics):
+    if gen == Character.Characteristics.HEIGHT:
+        chromosome[gen.value] = random.uniform(1.3, 2.0)
+        return chromosome
+
+    chromosome[gen.value] = random.uniform(0, 150)
+
+    # Normalize points so that the sum of all points is 150
+    normalize_points(chromosome)
