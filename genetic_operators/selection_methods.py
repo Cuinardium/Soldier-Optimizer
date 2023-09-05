@@ -97,7 +97,10 @@ __selection_methods: Dict[str, Callable] = {
 }
 
 
+# Build a selection method from the given configuration
 def get_selection_method(config: dict) -> SelectionMethod:
+
+    # Get selection methods
     selection_method1 = config["method1"]
     if selection_method1 not in __selection_methods:
         raise ValueError(f"Unknown selection method: {selection_method1}")
@@ -110,6 +113,7 @@ def get_selection_method(config: dict) -> SelectionMethod:
 
     selection_method2 = __selection_methods[selection_method2]
 
+    # Get proportion of population to be selected by method 1
     method1_propotion = config["method1_proportion"]
     if method1_propotion < 0 or method1_propotion > 1:
         raise ValueError(
@@ -118,6 +122,7 @@ def get_selection_method(config: dict) -> SelectionMethod:
 
     selection_amount = config["amount"]
 
+    # Build the selection method joining the two methods
     def joined_selection_method(
         population: list[Character], fitness_function: FitnessFunction
     ) -> list[Character]:
