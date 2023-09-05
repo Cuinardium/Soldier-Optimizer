@@ -14,7 +14,7 @@ def simulate(
     stop_criteria,
     population_size: int,
 ) -> list[Character]:
-    population = initialize_population(population_size)
+    population = [random_individual() for _ in range(population_size)]
 
     # Run the simulation until the stop criteria is met
     iterations = 0
@@ -33,12 +33,3 @@ def simulate(
 
     return population
 
-
-def initialize_population(population_size: int) -> list[Character]:
-    population = []
-
-    # Create a random individual for each index in the population
-    for _ in range(population_size):
-        population.append(random_individual())
-
-    return population

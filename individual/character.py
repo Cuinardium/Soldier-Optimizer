@@ -112,13 +112,15 @@ class Character:
 
 # Create a random individual
 def random_individual() -> Character:
-    chromosome: list[float] = []
+    chromosome: list[float] = [0.0 for _ in range(6)]
 
     # Height must be between 1.3 and 2.0
     chromosome[Character.Characteristics.HEIGHT.value] = random.uniform(1.3, 2.0)
 
     # Strength, agility, expertise, resistance, health, normal distribution
     for characteristic in Character.Characteristics:
+        if characteristic == Character.Characteristics.HEIGHT:
+            continue
         chromosome[characteristic.value] = random.uniform(0, 150)
 
     normalize_points(chromosome)

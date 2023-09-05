@@ -1,4 +1,5 @@
 import json
+from individual.character import random_individual
 
 from individual.fitness import get_class_fitness_function
 
@@ -21,7 +22,7 @@ def main():
         mutation_method = get_mutation_method(config["mutation"])
         replacement_method = get_selection_method(config["replacement"])
 
-        # TODO: Implement stop criteri
+        # TODO: Implement stop criteria
         stop_criteria = config["stop_criteria"]
 
         population_size = config["population_size"]
