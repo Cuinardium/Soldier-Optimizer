@@ -1,8 +1,7 @@
 import random
-from typing import Callable, Dict, Tuple
+from typing import Callable
 from individual.character import Character, normalize_points
 
-# TODO: Make this configurable
 mutation_probability: float = 0.5
 
 # --------------------- Methods --------------------- #
