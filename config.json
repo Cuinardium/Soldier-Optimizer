@@ -3,8 +3,15 @@
 
     "population_size": 2,
 
+    "selection" {
+        "method1": "tournament",
+        "method1_proportion": 0.5,
+        "method2": "roulette",
+        "selection_amount": 2,
+    }
+
     "crossover": {
-        "crossover_method": "anular",
+        "method": "anular",
         "uniform": {
             "crossover_probability": 0.5,
         },
@@ -13,19 +20,18 @@
     "mutation": {
         "mutation_probability": 0.1,
         "probability_evolution": "uniform",
-        "mutation_method": "single_gen",
+        "method": "single_gen",
         "single_gen": {
             "gen_to_mutate": "height",
         }
     }
 
-    "a_weight": 0.0,
-    "selection_method1": "elitism",
-    "selection_method2": "roulette",
-
-    "b_weight": 0.0,
-    "replacement_method1": "",
-    "replacement_method2": "",
+    "replacement": {
+        "method1": "elitism",
+        "method1_proportion": 0.5,
+        "method2": "roulette",
+        "replacement_amount": 2,
+    }
 
     "stop_criteria": {}
 }

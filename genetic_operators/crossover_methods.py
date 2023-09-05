@@ -63,7 +63,7 @@ __crossover_methods: Dict[str, Callable] = {
 
 # Builds the crossover method from the given config
 def get_crossover_method(crossover_config: dict) -> CrossOverMethod:
-    crossover_method = crossover_config["crossover_method"]
+    crossover_method = crossover_config["method"]
 
     if crossover_method not in __crossover_methods:
         raise ValueError(f"Unknown crossover method: {crossover_method}")
