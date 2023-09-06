@@ -1,23 +1,26 @@
+import copy
+import functools
 from typing import Callable, Dict
 from individual.character import Character
 from individual.fitness import FitnessFunction
 import random
 
+
 # --------------------- Methods --------------------- #
 
 
 def __elitism(
-    population: list[Character],
-    fitness_function: FitnessFunction,
-    selection_amount: int,
+        population: list[Character],
+        fitness_function: FitnessFunction,
+        selection_amount: int,
 ) -> list[Character]:
     return population
 
 
 def __roulette(
-    population: list[Character],
-    fitness_function: FitnessFunction,
-    selection_amount: int,
+        population: list[Character],
+        fitness_function: FitnessFunction,
+        selection_amount: int,
 ) -> list[Character]:
     # Calcula la suma total de aptitudes de todos los individuos.
     total_fitness = sum(fitness_function(character) for character in population)
@@ -53,35 +56,47 @@ def __roulette(
 
 
 def __universal(
-    population: list[Character],
-    fitness_function: FitnessFunction,
-    selection_amount: int,
+        population: list[Character],
+        fitness_function: FitnessFunction,
+        selection_amount: int,
 ) -> list[Character]:
     return population
 
 
 def __boltzmann(
-    population: list[Character],
-    fitness_function: FitnessFunction,
-    selection_amount: int,
+        population: list[Character],
+        fitness_function: FitnessFunction,
+        selection_amount: int,
 ) -> list[Character]:
     return population
 
 
 def __tournament(
-    population: list[Character],
-    fitness_function: FitnessFunction,
-    selection_amount: int,
+        population: list[Character],
+        fitness_function: FitnessFunction,
+        selection_amount: int,
 ) -> list[Character]:
     return population
 
 
 def __ranking(
-    population: list[Character],
-    fitness_function: FitnessFunction,
-    selection_amount: int,
+        population: list[Character],
+        fitness_function: FitnessFunction,
+        selection_amount: int,
 ) -> list[Character]:
-    return population
+    ranked_list = copy.copy(population)
+
+    ranked_list.sort(key=functools.cmp_to_key(lambda x, y: compare(x, y, fitness_function)))
+
+    size = len(ranked_list)
+
+    #TODO: ver si seria mejor crear un dict character -> ranking
+    # para agilizar la obtencion del puesto
+    # (no usar index de la ranked_list)
+
+    return __roulette(population,
+                      lambda character: (size - ranked_list.index(character)) / size,
+                      selection_amount)
 
 
 # --------------------- Builder --------------------- #
@@ -99,7 +114,6 @@ __selection_methods: Dict[str, Callable] = {
 
 # Build a selection method from the given configuration
 def get_selection_method(config: dict) -> SelectionMethod:
-
     # Get selection methods
     selection_method1 = config["method1"]
     if selection_method1 not in __selection_methods:
@@ -124,7 +138,7 @@ def get_selection_method(config: dict) -> SelectionMethod:
 
     # Build the selection method joining the two methods
     def joined_selection_method(
-        population: list[Character], fitness_function: FitnessFunction
+            population: list[Character], fitness_function: FitnessFunction
     ) -> list[Character]:
         amount_1 = int(selection_amount * method1_propotion)
 
@@ -135,3 +149,9 @@ def get_selection_method(config: dict) -> SelectionMethod:
         )
 
     return joined_selection_method
+
+
+# --------------------- Helpers --------------------- #
+
+def compare(character1, character2, fitness_function):
+    return fitness_function(character1) - fitness_function(character2)
