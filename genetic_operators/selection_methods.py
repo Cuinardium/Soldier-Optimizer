@@ -14,7 +14,9 @@ def __elitism(
         fitness_function: FitnessFunction,
         selection_amount: int,
 ) -> list[Character]:
-    return population
+    population.sort(key=fitness_function, reverse=True)
+    selections = population[:selection_amount]
+    return selections
 
 
 def __roulette(
@@ -109,42 +111,42 @@ def __tournament(
         fitness_function: FitnessFunction,
         selection_amount: int,
 ) -> list[Character]:
-    
+
     M=2
-    
+
     selections = []
-    
+
     for _ in range(selection_amount):
         # Agrupo M, y tomo el maximo. Creo que en el caso de que tengan igual fitness,
         # max() toma el primero que encuentra, no se si eso esta mal.
         tournament= random.sample(population, M)
         winner = max(tournament, key=fitness_function)
         selections.append(winner)
-            
-    
+
+
     return selections
 
-# TODO El threshold deberia ser parametrizable? 
+# TODO El threshold deberia ser parametrizable?
 def __tournament_probabilistic(
     population: list[Character],
     fitness_function: FitnessFunction,
     selection_amount: int,
 ) -> list[Character]:
-    
+
     threshold = 0.75
     selections = []
-    
+
     for _ in range(selection_amount):
-        
+
         random_probability = random.random()
         tournament= random.sample(population, 2)
-        
+
         if(random_probability<threshold):
             selections.append( max(tournament, key=fitness_function) )
         else:
             selections.append( min(tournament, key=fitness_function) )
-            
-    
+
+
     return selections
 
 
