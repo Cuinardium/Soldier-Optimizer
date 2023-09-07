@@ -70,13 +70,26 @@ def __boltzmann(
 ) -> list[Character]:
     return population
 
-
+# TODO agregar parametro para M
 def __tournament(
         population: list[Character],
         fitness_function: FitnessFunction,
         selection_amount: int,
 ) -> list[Character]:
-    return population
+    
+    M=2
+    
+    selections = []
+    
+    for _ in range(selection_amount):
+        # Agrupo M, y tomo el maximo. Creo que en el caso de que tengan igual fitness,
+        # max() toma el primero que encuentra, no se si eso esta mal.
+        tournament= random.sample(population, M)
+        winner = max(tournament, key=fitness_function)
+        selections.append(winner)
+            
+    
+    return selections
 
 # TODO El threshold deberia ser parametrizable? 
 def __tournament_probabilistic(
