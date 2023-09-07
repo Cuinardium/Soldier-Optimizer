@@ -169,9 +169,7 @@ def __ranking(
 ) -> list[Character]:
     ranked_list = copy.copy(population)
 
-    ranked_list.sort(
-        key=functools.cmp_to_key(lambda x, y: __compare(x, y, fitness_function))
-    )
+    ranked_list.sort(key=fitness_function, reverse=True)
 
     size = len(ranked_list)
 
