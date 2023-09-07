@@ -14,7 +14,7 @@
         "tournament": {
             "size": 2,
             "probabilistic": false,
-            "treshold": 0.75
+            "threshold": 0.75
         }
     },
 
@@ -44,7 +44,8 @@
         },
         "tournament": {
             "size": 2,
-            "treshold": 0.75
+            "probabilistic": false,
+            "threshold": 0.75
         }
     },
 
