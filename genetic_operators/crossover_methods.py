@@ -1,6 +1,7 @@
 import math
 import random
 from individual.character import Character
+from individual.character import normalize_points
 from typing import Callable, Dict, Tuple
 
 CHROMOSOME_LENGTH = 6
@@ -125,4 +126,6 @@ def __cross_parents(
         child1.chromosome[index] = parent2.chromosome[index]
         child2.chromosome[index] = parent1.chromosome[index]
 
+    normalize_points(child1.chromosome)
+    normalize_points(child2.chromosome)
     return child1, child2
