@@ -1,18 +1,18 @@
 {
-    "character_class": "archer",
+    "character_class": "warrior",
 
-    "population_size": 2,
+    "population_size": 100,
 
     "selection": {
-        "method1": "tournament",
+        "method1": "elitism",
         "method1_proportion": 0.5,
-        "method2": "roulette",
-        "amount": 2,
+        "method2": "elitism",
+        "amount": 50,
         "boltzmann": {
             "temperature": 100
         },
         "tournament": {
-            "size": 2
+            "size": 2,
             "probabilistic": false,
             "treshold": 0.75
         }
@@ -37,8 +37,8 @@
     "replacement": {
         "method1": "elitism",
         "method1_proportion": 0.5,
-        "method2": "roulette",
-        "amount": 2,
+        "method2": "elitism",
+        "amount": 100,
         "boltzmann": {
             "temperature": 100
         },
@@ -48,5 +48,24 @@
         }
     },
 
-    "stop_criteria": {}
+    "stop_criteria": {
+        "criteria": "generations",
+        "generations": {
+            "max_generations": 1000
+        },
+        "fitness": {
+            "expected_fitness": 50
+        },
+        "fitness_convergence": {
+            "fitness_delta": 0.1
+        },
+        "structure_convergence": {
+            "strength_delta": 0.01,
+            "agility_delta": 0.01,
+            "expertise_delta": 0.01,
+            "resistance_delta": 0.01,
+            "health_delta": 0.01,
+            "height_delta": 0.01
+        }
+    }
 }

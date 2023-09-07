@@ -3,6 +3,7 @@ from genetic_operators.mutation_methods import MutationMethod
 from genetic_operators.selection_methods import SelectionMethod
 from individual.character import Character, random_individual
 from individual.fitness import FitnessFunction
+from stop_criteria import StopCriteria
 
 
 def simulate(
@@ -11,14 +12,14 @@ def simulate(
     crossover_method: CrossOverMethod,
     mutation_method: MutationMethod,
     replacement_method: SelectionMethod,
-    stop_criteria,
+    stop_criteria: StopCriteria,
     population_size: int,
 ) -> list[Character]:
     population = [random_individual() for _ in range(population_size)]
 
     # Run the simulation until the stop criteria is met
     iterations = 0
-    while not stop_criteria(population, iterations):
+    while True:
         # Select individuals for crossover
         parents = selection_method(population, fitness_function)
 
@@ -27,7 +28,11 @@ def simulate(
         children = mutation_method(children)
 
         # Replace the old population with the new population
+        old_population = population
         population = replacement_method(population + children, fitness_function)
+
+        if stop_criteria(population, old_population, iterations, fitness_function):
+            break
 
         iterations += 1
 

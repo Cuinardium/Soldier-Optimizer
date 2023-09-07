@@ -237,6 +237,8 @@ def __compare(character1, character2, fitness_function):
     return fitness_function(character1) - fitness_function(character2)
 
 
+# Returns the selection method with the given name
+# It configures the method with the given parameters if needed
 def __get_method(
     name: str, selection_amount: int, config: Dict
 ) -> Callable[[list[Character], FitnessFunction, int], list[Character]]:

@@ -6,6 +6,8 @@ from genetic_operators.selection_methods import get_selection_method
 from genetic_operators.crossover_methods import get_crossover_method
 from genetic_operators.mutation_methods import get_mutation_method
 
+from stop_criteria import get_stop_criteria
+
 from simulation import simulate
 
 
@@ -21,8 +23,7 @@ def main():
         mutation_method = get_mutation_method(config["mutation"])
         replacement_method = get_selection_method(config["replacement"])
 
-        # TODO: Implement stop criteria
-        stop_criteria = config["stop_criteria"]
+        stop_criteria = get_stop_criteria(config["stop_criteria"])
 
         population_size = config["population_size"]
 
