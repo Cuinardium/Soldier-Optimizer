@@ -78,6 +78,29 @@ def __tournament(
 ) -> list[Character]:
     return population
 
+# TODO El threshold deberia ser parametrizable? 
+def __tournament_probabilistic(
+    population: list[Character],
+    fitness_function: FitnessFunction,
+    selection_amount: int,
+) -> list[Character]:
+    
+    threshold = 0.75
+    selections = []
+    
+    for _ in range(selection_amount):
+        
+        random_probability = random.random()
+        tournament= random.sample(population, 2)
+        
+        if(random_probability<threshold):
+            selections.append( max(tournament, key=fitness_function) )
+        else:
+            selections.append( min(tournament, key=fitness_function) )
+            
+    
+    return selections
+
 
 def __ranking(
         population: list[Character],
