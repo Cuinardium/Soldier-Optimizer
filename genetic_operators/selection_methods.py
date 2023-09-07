@@ -108,7 +108,7 @@ def __boltzmann(
     temperature = 100
 
     # e^(f(i)/T)
-    probabilities = [exp(character.fitness / temperature) for character in population]
+    probabilities = [exp(fitness_function(character) / temperature) for character in population]
 
     # Normalizo las probabilidades -> la sum me da 1
     total_probability = sum(probabilities)
