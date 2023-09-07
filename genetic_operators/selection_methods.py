@@ -3,6 +3,7 @@ import functools
 from typing import Callable, Dict
 from individual.character import Character
 from individual.fitness import FitnessFunction
+from math import exp
 import random
 
 
@@ -98,12 +99,26 @@ def __universal(
     return selections
 
 
+# TODO: agregar parametro para la temp
 def __boltzmann(
         population: list[Character],
         fitness_function: FitnessFunction,
         selection_amount: int,
 ) -> list[Character]:
-    return population
+    temperature = 100
+
+    # e^(f(i)/T)
+    probabilities = [exp(character.fitness / temperature) for character in population]
+
+    # Normalizo las probabilidades -> la sum me da 1
+    total_probability = sum(probabilities)
+    normalized_probabilities = [p / total_probability for p in probabilities]
+
+    # Hago las selecciones random, teniendo en cuenta los pesos
+    selected_population = random.choices(population, weights=normalized_probabilities, k=selection_amount)
+
+    # retorno la poblacion seleccionada
+    return selected_population
 
 # TODO agregar parametro para M
 def __tournament(
