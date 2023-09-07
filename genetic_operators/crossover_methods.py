@@ -7,6 +7,7 @@ CHROMOSOME_LENGTH = 6
 
 # --------------------- Methods --------------------- #
 
+
 # Selects a random point in the chromosome and a random amount of genes to cross
 def __anular(parent1: Character, parent2: Character) -> Tuple[Character, Character]:
     from_point = random.randint(0, CHROMOSOME_LENGTH - 1)
@@ -97,13 +98,14 @@ def __cross_population(
     population: list[Character],
     method: Callable[[Character, Character], Tuple[Character, Character]],
 ) -> list[Character]:
-    amount_to_cross = (
-        len(population) if len(population) % 2 == 0 else len(population) - 1
-    )
+    random.shuffle(population)
+    population_length = len(population)
 
     children = []
-    for i in range(0, amount_to_cross, 2):
-        child1, child2 = method(population[i], population[i + 1])
+    for i in range(0, population_length, 2):
+        child1, child2 = method(
+            population[i % population_length], population[(i + 1) % population_length]
+        )
 
         children.append(child1)
         children.append(child2)
