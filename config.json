@@ -7,7 +7,15 @@
         "method1": "tournament",
         "method1_proportion": 0.5,
         "method2": "roulette",
-        "amount": 2
+        "amount": 2,
+        "boltzmann": {
+            "temperature": 100
+        },
+        "tournament": {
+            "size": 2
+            "probabilistic": false,
+            "treshold": 0.75
+        }
     },
 
     "crossover": {
@@ -30,7 +38,14 @@
         "method1": "elitism",
         "method1_proportion": 0.5,
         "method2": "roulette",
-        "amount": 2
+        "amount": 2,
+        "boltzmann": {
+            "temperature": 100
+        },
+        "tournament": {
+            "size": 2,
+            "treshold": 0.75
+        }
     },
 
     "stop_criteria": {}

@@ -1,5 +1,4 @@
 import json
-from individual.character import random_individual
 
 from individual.fitness import get_class_fitness_function
 

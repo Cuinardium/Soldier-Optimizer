@@ -11,9 +11,9 @@ import random
 
 
 def __elitism(
-        population: list[Character],
-        fitness_function: FitnessFunction,
-        selection_amount: int,
+    population: list[Character],
+    fitness_function: FitnessFunction,
+    selection_amount: int,
 ) -> list[Character]:
     population.sort(key=fitness_function, reverse=True)
     selections = population[:selection_amount]
@@ -21,9 +21,9 @@ def __elitism(
 
 
 def __roulette(
-        population: list[Character],
-        fitness_function: FitnessFunction,
-        selection_amount: int,
+    population: list[Character],
+    fitness_function: FitnessFunction,
+    selection_amount: int,
 ) -> list[Character]:
     # Calcula la suma total de aptitudes de todos los individuos.
     total_fitness = sum(fitness_function(character) for character in population)
@@ -59,9 +59,9 @@ def __roulette(
 
 
 def __universal(
-        population: list[Character],
-        fitness_function: FitnessFunction,
-        selection_amount: int,
+    population: list[Character],
+    fitness_function: FitnessFunction,
+    selection_amount: int,
 ) -> list[Character]:
     # Calcula la suma total de aptitudes de todos los individuos.
     total_fitness = sum(fitness_function(character) for character in population)
@@ -81,10 +81,10 @@ def __universal(
     # Realiza las selecciones especificadas
     selections = []
     random_init = random.random()
-    j=0
+    j = 0
     for _ in range(selection_amount):
-        random_value = (random_init+j)/selection_amount-1
-        j+=1
+        random_value = (random_init + j) / selection_amount - 1
+        j += 1
 
         # Encuentra el individuo correspondiente al valor aleatorio
         selected_individual = None
@@ -99,90 +99,91 @@ def __universal(
     return selections
 
 
-# TODO: agregar parametro para la temp
 def __boltzmann(
-        population: list[Character],
-        fitness_function: FitnessFunction,
-        selection_amount: int,
+    population: list[Character],
+    fitness_function: FitnessFunction,
+    selection_amount: int,
+    temperature: int,
 ) -> list[Character]:
-    temperature = 100
-
     # e^(f(i)/T)
-    probabilities = [exp(fitness_function(character) / temperature) for character in population]
+    probabilities = [
+        exp(fitness_function(character) / temperature) for character in population
+    ]
 
     # Normalizo las probabilidades -> la sum me da 1
     total_probability = sum(probabilities)
     normalized_probabilities = [p / total_probability for p in probabilities]
 
     # Hago las selecciones random, teniendo en cuenta los pesos
-    selected_population = random.choices(population, weights=normalized_probabilities, k=selection_amount)
+    selected_population = random.choices(
+        population, weights=normalized_probabilities, k=selection_amount
+    )
 
     # retorno la poblacion seleccionada
     return selected_population
 
-# TODO agregar parametro para M
+
 def __tournament(
-        population: list[Character],
-        fitness_function: FitnessFunction,
-        selection_amount: int,
+    population: list[Character],
+    fitness_function: FitnessFunction,
+    selection_amount: int,
+    tournament_size: int,
 ) -> list[Character]:
-
-    M=2
-
     selections = []
 
     for _ in range(selection_amount):
         # Agrupo M, y tomo el maximo. Creo que en el caso de que tengan igual fitness,
         # max() toma el primero que encuentra, no se si eso esta mal.
-        tournament= random.sample(population, M)
+        tournament = random.sample(population, tournament_size)
         winner = max(tournament, key=fitness_function)
         selections.append(winner)
 
-
     return selections
 
-# TODO El threshold deberia ser parametrizable?
+
 def __tournament_probabilistic(
     population: list[Character],
     fitness_function: FitnessFunction,
     selection_amount: int,
+    tournament_size: int,
+    threshold: float,
 ) -> list[Character]:
-
-    threshold = 0.75
     selections = []
 
     for _ in range(selection_amount):
-
         random_probability = random.random()
-        tournament= random.sample(population, 2)
+        tournament = random.sample(population, tournament_size)
 
-        if(random_probability<threshold):
-            selections.append( max(tournament, key=fitness_function) )
+        if random_probability < threshold:
+            selections.append(max(tournament, key=fitness_function))
         else:
-            selections.append( min(tournament, key=fitness_function) )
-
+            selections.append(min(tournament, key=fitness_function))
 
     return selections
 
 
 def __ranking(
-        population: list[Character],
-        fitness_function: FitnessFunction,
-        selection_amount: int,
+    population: list[Character],
+    fitness_function: FitnessFunction,
+    selection_amount: int,
 ) -> list[Character]:
     ranked_list = copy.copy(population)
 
-    ranked_list.sort(key=functools.cmp_to_key(lambda x, y: compare(x, y, fitness_function)))
+    ranked_list.sort(
+        key=functools.cmp_to_key(lambda x, y: __compare(x, y, fitness_function))
+    )
 
     size = len(ranked_list)
 
-    #TODO: ver si seria mejor crear un dict character -> ranking
+    # TODO: ver si seria mejor crear un dict character -> ranking
     # para agilizar la obtencion del puesto
     # (no usar index de la ranked_list)
 
-    return __roulette(population,
-                      lambda character: (size - ranked_list.index(character)) / size,
-                      selection_amount)
+    return __roulette(
+        population,
+        lambda character: (size - ranked_list.index(character)) / size,
+        selection_amount,
+    )
 
 
 # --------------------- Builder --------------------- #
@@ -200,44 +201,89 @@ __selection_methods: Dict[str, Callable] = {
 
 # Build a selection method from the given configuration
 def get_selection_method(config: dict) -> SelectionMethod:
+    selection_amount = config["amount"]
+
     # Get selection methods
-    selection_method1 = config["method1"]
-    if selection_method1 not in __selection_methods:
-        raise ValueError(f"Unknown selection method: {selection_method1}")
+    selection_method1_name = config["method1"]
+    selection_method1 = __get_method(selection_method1_name, selection_amount, config)
 
-    selection_method1 = __selection_methods[selection_method1]
-
-    selection_method2 = config["method2"]
-    if selection_method2 not in __selection_methods:
-        raise ValueError(f"Unknown selection method: {selection_method2}")
-
-    selection_method2 = __selection_methods[selection_method2]
+    selection_method2_name = config["method2"]
+    selection_method2 = __get_method(selection_method2_name, selection_amount, config)
 
     # Get proportion of population to be selected by method 1
-    method1_propotion = config["method1_proportion"]
-    if method1_propotion < 0 or method1_propotion > 1:
+    method1_proportion = config["method1_proportion"]
+    if method1_proportion < 0 or method1_proportion > 1:
         raise ValueError(
-            f"Method 1 proportion must be between 0 and 1. Received: {method1_propotion}"
+            f"Method 1 proportion must be between 0 and 1. Received: {method1_proportion}"
         )
-
-    selection_amount = config["amount"]
 
     # Build the selection method joining the two methods
     def joined_selection_method(
-            population: list[Character], fitness_function: FitnessFunction
+        population: list[Character], fitness_function: FitnessFunction
     ) -> list[Character]:
-        amount_1 = int(selection_amount * method1_propotion)
+        amount_1 = int(selection_amount * method1_proportion)
 
         return selection_method1(
             population, fitness_function, amount_1
-        ) + selection_method2(
-            population, fitness_function, selection_amount - amount_1
-        )
+        ) + selection_method2(population, fitness_function, selection_amount - amount_1)
 
     return joined_selection_method
 
 
 # --------------------- Helpers --------------------- #
 
-def compare(character1, character2, fitness_function):
+
+def __compare(character1, character2, fitness_function):
     return fitness_function(character1) - fitness_function(character2)
+
+
+def __get_method(
+    name: str, selection_amount: int, config: Dict
+) -> Callable[[list[Character], FitnessFunction, int], list[Character]]:
+    if name not in __selection_methods:
+        raise ValueError(f"Unknown selection method: {name}")
+
+    # Special cases
+    if name == "boltzmann":
+        boltzmann_config = config["boltzmann"]
+        temperature = boltzmann_config["temperature"]
+
+        return lambda population, fitness_function, amount: __boltzmann(
+            population, fitness_function, selection_amount, temperature
+        )
+    if name == "tournament":
+        tournament_config = config["tournament"]
+        tournament_size = tournament_config["size"]
+
+        if tournament_size > selection_amount:
+            raise ValueError(
+                f"Tournament size ({tournament_size}) must be less than or equal to selection amount ({selection_amount})"
+            )
+
+        is_probabilistic = tournament_config["probabilistic"]
+        if is_probabilistic:
+            threshold = tournament_config["threshold"]
+
+            if threshold < 0 or threshold > 1:
+                raise ValueError(
+                    f"Tournament threshold must be between 0 and 1. Received: {threshold}"
+                )
+
+            return (
+                lambda population, fitness_function, amount: __tournament_probabilistic(
+                    population,
+                    fitness_function,
+                    amount,
+                    tournament_size,
+                    threshold,
+                )
+            )
+
+        return lambda population, fitness_function, amount: __tournament(
+            population, fitness_function, amount, tournament_size
+        )
+
+    # No special parameters
+    return lambda population, fitness_function, amount: __selection_methods[name](
+        population, fitness_function, amount
+    )
