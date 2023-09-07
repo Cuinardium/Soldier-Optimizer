@@ -212,9 +212,9 @@ def get_selection_method(config: dict) -> SelectionMethod:
         amount_1 = int(selection_amount * method1_propotion)
 
         return selection_method1(
-            population[:amount_1], fitness_function, amount_1
+            population, fitness_function, amount_1
         ) + selection_method2(
-            population[amount_1:], fitness_function, selection_amount - amount_1
+            population, fitness_function, selection_amount - amount_1
         )
 
     return joined_selection_method
