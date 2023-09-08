@@ -1,13 +1,13 @@
 {
-    "character_class": "warrior",
+    "character_class": "infiltrator",
 
-    "population_size": 100,
+    "population_size": 1000,
 
     "selection": {
-        "method1": "elitism",
+        "method1": "boltzmann",
         "method1_proportion": 0.5,
-        "method2": "elitism",
-        "amount": 50,
+        "method2": "tournament",
+        "amount": 1000,
         "boltzmann": {
             "temperature": 100
         },
@@ -35,10 +35,10 @@
     },
 
     "replacement": {
-        "method1": "elitism",
+        "method1": "roulette",
         "method1_proportion": 0.5,
-        "method2": "elitism",
-        "amount": 100,
+        "method2": "ranking",
+        "amount": 1000,
         "boltzmann": {
             "temperature": 100
         },
@@ -50,7 +50,7 @@
     },
 
     "stop_criteria": {
-        "criteria": "generations",
+        "criteria": "fitness_convergence",
         "generations": {
             "max_generations": 1000
         },
@@ -58,7 +58,7 @@
             "expected_fitness": 50
         },
         "fitness_convergence": {
-            "fitness_delta": 0.1
+            "fitness_delta": 0.001
         },
         "structure_convergence": {
             "strength_delta": 0.01,
