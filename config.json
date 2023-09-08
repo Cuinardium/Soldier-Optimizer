@@ -31,6 +31,9 @@
         "multi_gen": false,
         "single_gen": {
             "gen_to_mutate": "height"
+        },
+        "non_uniform": {
+            "descent_rate": 0.5
         }
     },
 
