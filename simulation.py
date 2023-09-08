@@ -1,3 +1,4 @@
+from typing import Tuple
 from genetic_operators.crossover_methods import CrossOverMethod
 from genetic_operators.mutation_methods import MutationMethod
 from genetic_operators.selection_methods import SelectionMethod
@@ -14,7 +15,7 @@ def simulate(
     replacement_method: SelectionMethod,
     stop_criteria: StopCriteria,
     population_size: int,
-) -> list[Character]:
+) -> Tuple[list[Character], int]:
     population = [random_individual() for _ in range(population_size)]
 
     # Run the simulation until the stop criteria is met
@@ -36,5 +37,5 @@ def simulate(
 
         iterations += 1
 
-    return population
+    return population, iterations
 
