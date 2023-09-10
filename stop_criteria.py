@@ -21,47 +21,77 @@ def __expected_fitness(
     return False
 
 
+fitness_similar_generations = 0
+
+
 def __population_fitness_convergence(
     population: List[Character],
-    old_population: List[Character],
+    previous_population: List[Character],
     fitness_function: FitnessFunction,
     fitness_convergence_delta: float,
+    similar_generations_threshold: int,
 ) -> bool:
-    population_fitness = sum(
+    global fitness_similar_generations
+
+    population_best_fitness = max(
         fitness_function(individual) for individual in population
-    ) / len(population)
-    old_population_fitness = sum(
-        fitness_function(individual) for individual in old_population
-    ) / len(old_population)
+    )
+    previous_population_best_fitness = max(
+        fitness_function(individual) for individual in previous_population
+    )
 
-    fitness_delta = abs(population_fitness - old_population_fitness)
+    if (
+        abs(population_best_fitness - previous_population_best_fitness)
+        > fitness_convergence_delta
+        or previous_population_best_fitness == -1
+    ):
+        previous_population_best_fitness = population_best_fitness
+        fitness_similar_generations = 0
+        return False
 
-    return fitness_delta <= fitness_convergence_delta
+    fitness_similar_generations += 1
+
+    return fitness_similar_generations >= similar_generations_threshold
+
+
+structure_similar_generations = 0
 
 
 def __population_structure_convergence(
     population: List[Character],
-    old_population: List[Character],
+    previous_population: List[Character],
     convergence_deltas: Dict[Character.Characteristics, float],
+    similar_generations_threshold: int,
+    similar_individuals_proportion: float,
 ) -> bool:
     characteristics_to_analyze = convergence_deltas.keys()
 
-    for characteristic in characteristics_to_analyze:
-        population_characteristic_avg = sum(
-            individual.chromosome[characteristic.value] for individual in population
-        ) / len(population)
-        old_population_characteristic_avg = sum(
-            individual.chromosome[characteristic.value] for individual in old_population
-        ) / len(old_population)
+    def __match(individual: Character, other_individual: Character) -> bool:
+        for characteristic in characteristics_to_analyze:
+            if (
+                abs(
+                    individual.chromosome[characteristic.value]
+                    - other_individual.chromosome[characteristic.value]
+                )
+                > convergence_deltas[characteristic]
+            ):
+                return False
+        return True
 
-        characteristic_delta = abs(
-            population_characteristic_avg - old_population_characteristic_avg
-        )
+    global structure_similar_generations
+    similar_individuals = 0
+    for individual in population:
+        for previous_individual in previous_population:
+            if __match(individual, previous_individual):
+                similar_individuals += 1
+                break
 
-        if characteristic_delta > convergence_deltas[characteristic]:
-            return False
+    if similar_individuals >= similar_individuals_proportion * len(population):
+        structure_similar_generations += 1
+    else:
+        structure_similar_generations = 0
 
-    return True
+    return structure_similar_generations >= similar_generations_threshold
 
 
 # -------------- Build ---------------------- #
@@ -76,40 +106,56 @@ def get_stop_criteria(config: dict) -> StopCriteria:
         generations_config = config["generations"]
         max_generations = generations_config["max_generations"]
 
-        return lambda population, old_population, generations, fitness_function: __max_generations(
+        return lambda population, previous_population, generations, fitness_function: __max_generations(
             max_generations, generations
         )
     if criteria == "fitness":
         fitness_config = config["fitness"]
         expected_fitness = fitness_config["expected_fitness"]
 
-        return lambda population, old_population, generations, fitness_function: __expected_fitness(
+        return lambda population, previous_population, generations, fitness_function: __expected_fitness(
             expected_fitness, population, fitness_function
         )
     if criteria == "fitness_convergence":
         fitness_convergence_config = config["fitness_convergence"]
         fitness_convergence_delta = fitness_convergence_config["fitness_delta"]
+        similar_generations_threshold = fitness_convergence_config[
+            "similar_generations_threshold"
+        ]
 
-        return lambda population, old_population, generations, fitness_function: __population_fitness_convergence(
-            population, old_population, fitness_function, fitness_convergence_delta
+        return lambda population, previous_population, generations, fitness_function: __population_fitness_convergence(
+            population,
+            previous_population,
+            fitness_function,
+            fitness_convergence_delta,
+            similar_generations_threshold,
         )
     if criteria == "structure_convergence":
-        structure_convergence_config: Dict[str, float] = config["structure_convergence"]
+        structure_convergence_config = config["structure_convergence"]
+        similar_generations_threshold = structure_convergence_config[
+            "similar_generations_threshold"
+        ]
+        similar_individuals_proportion = structure_convergence_config[
+            "similar_individuals_proportion"
+        ]
 
         deltas: Dict[Character.Characteristics, float] = {}
 
-        for key, delta in structure_convergence_config.items():
+        for characteristic_name, delta in structure_convergence_config["deltas"].items():
             if delta is None:
                 continue
-
-            # Remove _delta from string
-            characteristic_name = key.replace("_delta", "")
 
             characteristic = Character.Characteristics.from_string(characteristic_name)
             deltas[characteristic] = delta
 
-            return lambda population, old_population, generations, fitness_function: __population_structure_convergence(
-                population, old_population, deltas
-            )
+        return lambda population, previous_population, generations, fitness_function: __population_structure_convergence(
+            population,
+            previous_population,
+            deltas,
+            similar_generations_threshold,
+            similar_individuals_proportion,
+        )
+
+        
 
     raise ValueError(f"Invalid stop criteria: {criteria}")

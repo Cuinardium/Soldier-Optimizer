@@ -61,15 +61,20 @@
             "expected_fitness": 50
         },
         "fitness_convergence": {
-            "fitness_delta": 0.001
+            "fitness_delta": 0.001,
+            "similar_generations_threshold": 10
         },
         "structure_convergence": {
-            "strength_delta": 0.01,
-            "agility_delta": 0.01,
-            "expertise_delta": 0.01,
-            "resistance_delta": 0.01,
-            "health_delta": 0.01,
-            "height_delta": 0.01
+            "similar_generations_threshold": 10,
+            "similar_individuals_proportion": 0.9,
+            "deltas": { 
+                "strength": 0.01,
+                "agility": 0.01,
+                "expertise": 0.01,
+                "resistance": 0.01,
+                "health": 0.01,
+                "height": 0.01
+            }
         }
     }
 }
