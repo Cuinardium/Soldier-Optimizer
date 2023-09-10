@@ -28,7 +28,7 @@ def main():
         population_size = config["population_size"]
 
         # Run simulation
-        final_population = simulate(
+        final_population, iterations = simulate(
             fitness_function,
             selection_method,
             crossover_method,
@@ -43,6 +43,8 @@ def main():
         for individual in final_population:
             print(individual)
             print(f"Fitness: {fitness_function(individual)}\n")
+
+        print(f"Number of iterations: {iterations}")
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ import random
 from typing import Callable
 from individual.character import Character, normalize_points
 
-mutation_probability: float = 0.5
+mutation_probability: float
 
 # --------------------- Methods --------------------- #
 
@@ -33,16 +33,25 @@ def get_mutation_method(config: dict) -> MutationMethod:
     # Set the mutation probability
     global mutation_probability
     mutation_probability = config["probability"]
+    if mutation_probability < 0 or mutation_probability > 1:
+        raise ValueError("Mutation probability must be between 0 and 1 (inclusive)")
 
     gen_to_mutate = Character.Characteristics.from_string(
         config["single_gen"]["gen_to_mutate"]
     )
+
+    mutation_probability_descent_rate = config["non_uniform"]["descent_rate"]
+    if mutation_probability_descent_rate < 0 or mutation_probability_descent_rate > 1:
+        raise ValueError(
+            "Mutation probability descent rate must be between 0 and 1 (inclusive)"
+        )
 
     return lambda population: __mutate_population(
         population,
         config["multi_gen"],
         config["uniform"],
         gen_to_mutate,
+        mutation_probability_descent_rate,
     )
 
 
@@ -54,6 +63,7 @@ def __mutate_population(
     multi_gen: bool,
     uniform: bool,
     gen_to_mutate: Character.Characteristics,
+    mutation_probability_descent_rate: float,
 ) -> list[Character]:
     global mutation_probability
 
@@ -67,7 +77,7 @@ def __mutate_population(
 
     if not uniform:
         # Reduce mutation probability
-        mutation_probability *= 0.95
+        mutation_probability *= 1 - mutation_probability_descent_rate
 
     return population
 
