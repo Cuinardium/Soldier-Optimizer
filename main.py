@@ -6,9 +6,9 @@ from individual.fitness import get_class_fitness_function
 
 from genetic_operators.selection_methods import get_selection_method
 from genetic_operators.crossover_methods import get_crossover_method
-from genetic_operators.mutation_methods import get_mutation_method
+from genetic_operators.mutation_methods import get_mutation_method, reset_mutation_globals
 
-from stop_criteria import get_stop_criteria
+from stop_criteria import get_stop_criteria, reset_stop_criteria_globals
 
 from simulation import simulate
 
@@ -54,6 +54,9 @@ def main():
                 final_population, key=lambda individual: fitness_function(individual)
             )
             simulation_results.append((best_individual, generations))
+
+            reset_stop_criteria_globals()
+            reset_mutation_globals()
 
             print(f"Best individual: {best_individual}")
             print(f"Fitness: {fitness_function(best_individual)}")

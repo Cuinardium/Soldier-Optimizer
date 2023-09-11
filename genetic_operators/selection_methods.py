@@ -1,5 +1,4 @@
 import copy
-import functools
 from typing import Callable, Dict
 from individual.character import Character
 from individual.fitness import FitnessFunction

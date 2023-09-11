@@ -3,6 +3,7 @@ from typing import Callable
 from individual.character import Character, normalize_points
 
 mutation_probability: float
+initial_mutation_probability: float
 
 # --------------------- Methods --------------------- #
 
@@ -32,7 +33,10 @@ MutationMethod = Callable[[list[Character]], list[Character]]
 def get_mutation_method(config: dict) -> MutationMethod:
     # Set the mutation probability
     global mutation_probability
+    global initial_mutation_probability
     mutation_probability = config["probability"]
+    initial_mutation_probability = mutation_probability
+
     if mutation_probability < 0 or mutation_probability > 1:
         raise ValueError("Mutation probability must be between 0 and 1 (inclusive)")
 
@@ -91,3 +95,9 @@ def __mutate_gen(chromosome: list[float], gen: Character.Characteristics):
 
     # Normalize points so that the sum of all points is 150
     normalize_points(chromosome)
+
+
+def reset_mutation_globals():
+    global mutation_probability
+    global initial_mutation_probability
+    mutation_probability = initial_mutation_probability

@@ -141,7 +141,9 @@ def get_stop_criteria(config: dict) -> StopCriteria:
 
         deltas: Dict[Character.Characteristics, float] = {}
 
-        for characteristic_name, delta in structure_convergence_config["deltas"].items():
+        for characteristic_name, delta in structure_convergence_config[
+            "deltas"
+        ].items():
             if delta is None:
                 continue
 
@@ -156,6 +158,12 @@ def get_stop_criteria(config: dict) -> StopCriteria:
             similar_individuals_proportion,
         )
 
-        
-
     raise ValueError(f"Invalid stop criteria: {criteria}")
+
+
+# -------------- Helpers ---------------------- #
+def reset_stop_criteria_globals():
+    global fitness_similar_generations
+    global structure_similar_generations
+    fitness_similar_generations = 0
+    structure_similar_generations = 0
