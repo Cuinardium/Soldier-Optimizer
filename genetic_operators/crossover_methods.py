@@ -49,6 +49,9 @@ def __uniform(
             child1.chromosome[i] = parent2.chromosome[i]
             child2.chromosome[i] = parent1.chromosome[i]
 
+    normalize_points(child1.chromosome)
+    normalize_points(child2.chromosome)
+
     return child1, child2
 
 
@@ -72,7 +75,9 @@ def get_crossover_method(crossover_config: dict) -> CrossOverMethod:
 
     # Uniform crossover is a special case, since it needs a probability
     if crossover_method == "uniform":
-        uniform_crossover_probability = crossover_config["crossover_probability"]
+        uniform_crossover_probability = crossover_config["uniform"][
+            "crossover_probability"
+        ]
 
         if uniform_crossover_probability < 0 or uniform_crossover_probability > 1:
             raise ValueError(
