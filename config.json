@@ -1,4 +1,6 @@
 {
+    "test_name": "test1",
+    "iterations": 10,
     "character_class": "infiltrator",
 
     "population_size": 1000,
