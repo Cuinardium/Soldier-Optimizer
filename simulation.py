@@ -37,5 +37,5 @@ def simulate(
 
         iterations += 1
 
-    return population, iterations
+    return population, iterations + 1
 
