@@ -1,4 +1,4 @@
-#TP2 SIA - Algoritmos Géneticos
+TP2 SIA - Algoritmos Géneticos
 
 Este repositorio contiene un programa que simula la evolucion de una poblacion de soldados en busca de conseguir el mejor soldado para clase mediante el uso de algoritmos geneticos.  La simulacion desarrollada es altamente configurable mediante el archivo `config.json`. 
 
