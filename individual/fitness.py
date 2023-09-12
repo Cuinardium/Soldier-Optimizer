@@ -15,7 +15,7 @@ def __defender_fitness(character: Character) -> float:
 
 
 def __infiltrator_fitness(character: Character) -> float:
-    return 0.7 * character.get_attack() + 0.3 * character.get_defense()
+    return 0.8 * character.get_attack() + 0.3 * character.get_defense()
 
 
 FitnessFunction = Callable[[Character], float]
